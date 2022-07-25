@@ -1,4 +1,5 @@
 const Income = require("../models").income;
+const { paginate } = require("../utils/paginate");
 const log = require("log4js").getLogger("repository:income");
 log.level = "info";
 
@@ -8,8 +9,18 @@ exports.add = async (body) => {
 };
 
 exports.getAll = async (body) => {
-  const data = await Income.findAll(body);
-  return data;
+  const { limit, page, req } = body;
+  let data = await Income.findAndCountAll(body);
+
+  // * pagination
+  const pagin = await paginate({
+    length: data.count,
+    limit,
+    page,
+    req,
+  });
+  let result = { pagin, data };
+  return result;
 };
 
 exports.getById = async (id) => {

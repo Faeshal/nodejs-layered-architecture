@@ -10,7 +10,7 @@ exports.add = async (body) => {
 
 exports.getAll = async (body) => {
   log.info("body:", body);
-  const data = await incomeRepo.getAll(body);
+  let data = await incomeRepo.getAll(body);
   return data;
 };
 

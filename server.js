@@ -56,7 +56,7 @@ app.use(
 );
 
 // * Paginate
-app.use(paginate.middleware(20, 50));
+app.use(paginate.middleware(10, 30));
 
 // * Route
 app.use(require("./routes"));

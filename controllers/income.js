@@ -10,8 +10,20 @@ log.level = "debug";
 // @desc    get incomes
 // @access  public
 exports.getIncomes = asyncHandler(async (req, res, next) => {
-  const data = await incomeService.getAll({});
-  res.status(200).json({ success: true, data: data || [] });
+  const data = await incomeService.getAll({
+    limit: req.query.limit,
+    offset: req.skip,
+    order: [["createdAt", "DESC"]],
+    req,
+  });
+  res.status(200).json({
+    success: true,
+    totalData: data.data.count,
+    totalPage: data.pagin.totalPage,
+    currentPage: data.pagin.currentPage,
+    nextPage: data.pagin.nextPage,
+    data: data.data.rows || [],
+  });
 });
 
 // * @route POST /api/v1/incomes
