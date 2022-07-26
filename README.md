@@ -4,7 +4,7 @@
 
 ![img](https://cdn.buttercms.com/MeGKGWTZRZmCh0pNgSNP)
 
-❓ As you already know Express.js is an **unopinionated** Node.js framework, this means that developer free to determine how to structure the project. in Contrast with **opinionated** framework like Laravel or SpringBoot where developers are forced to follow their existing standard rules. However, one of the drawbacks of unopinionated framework is to finding best practices. There are no definite rules on how the project should be structure, each developer has own style to determining it. So i created this template as a backend boilerplate project that i usually use. I call this structure Service Layer Architecture & i will continuously update it when needed.
+❓ As you already know Express.js is an **unopinionated** framework, this means that developer free to determine how to structure the project. in Contrast with **opinionated** framework like Laravel or SpringBoot where developers are forced to follow their existing standard rules. However, one of the drawbacks of unopinionated framework is to finding best practices. There are no definite rules on how the project should be structure, each developer has own style to determining it. So i created this template as a backend boilerplate project that i usually use. I call this structure Service Layer Architecture & i will continuously update it when needed.
 
 💡 There are 3 main layers:
 
