@@ -29,7 +29,7 @@ exports.getById = async (id) => {
 };
 
 exports.update = async (body, id) => {
-  const data = await Income.update({ body }, { where: { id } });
+  const data = await Income.update(body, { where: { id } });
   return data;
 };
 
