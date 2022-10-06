@@ -8,6 +8,6 @@ log.level = "debug";
 // @desc    get analaytics
 // @access  public
 exports.getAnalytics = asyncHandler(async (req, res, next) => {
-  const data = await analyticService();
+  const data = await analyticService.getAnalytic();
   res.status(200).json({ success: true, data });
 });
