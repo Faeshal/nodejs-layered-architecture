@@ -6,8 +6,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const morgan = require("morgan");
 const cors = require("cors");
-const session = require("express-session");
-const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const compression = require("compression");
 const hpp = require("hpp");
 const helmet = require("helmet");
@@ -15,7 +13,6 @@ const log4js = require("log4js");
 const paginate = require("express-paginate");
 const dayjs = require("dayjs");
 const { errorHandler } = require("./middleware/errorHandler");
-const db = require("./models");
 const log = log4js.getLogger("entrypoint");
 log.level = "info";
 
@@ -30,30 +27,15 @@ app.use(express.urlencoded({ extended: true }));
 // * Http Logger
 morgan.token("time", (req) => {
   let user = "anonym";
-  if (req.session) {
-    if (req.session.name) {
-      user = req.session.name || "anonym";
+  if (req.user) {
+    if (req.user.name) {
+      user = req.user.name || "anonym";
     }
   }
   const time = dayjs().format("h:mm:ss A") + " - " + user;
   return time;
 });
 app.use(morgan("morgan: [:time] :method :url - :status"));
-
-// * Session Store
-app.set("trust proxy", 1);
-app.use(
-  session({
-    secret: process.env.COOKIE_SECRET,
-    store: new SequelizeStore({
-      db: db.sequelize,
-      expiration: 384 * 60 * 60 * 1000, // 16 days in milisecond
-    }),
-    resave: false,
-    saveUninitialized: false,
-    cookie: { maxAge: 14 * 24 * 60 * 60 * 1000 }, // 14 days
-  })
-);
 
 // * Paginate
 app.use(paginate.middleware(10, 30));
@@ -64,7 +46,38 @@ app.use(require("./routes"));
 // * Custom Error Handler
 app.use(errorHandler);
 
-// * Rolliing log (optional)
+// * Rolling Log
+let layoutConfig = {
+  type: "pattern",
+  pattern: "%x{id}: [%x{info}] %p %c - %[%m%]",
+  tokens: {
+    id: () => {
+      return Date.now();
+    },
+    info: (req) => {
+      const info = dayjs().format("D/M/YYYY h:mm:ss A");
+      return info;
+    },
+  },
+};
+log4js.configure({
+  appenders: {
+    app: {
+      type: "dateFile",
+      filename: "./logs/app.log",
+      numBackups: 3,
+      layout: layoutConfig,
+      maxLogSize: 7000000, // byte == 3mb
+    },
+    console: {
+      type: "console",
+      layout: layoutConfig,
+    },
+  },
+  categories: {
+    default: { appenders: ["app", "console"], level: "debug" },
+  },
+});
 
 // * Server Listen
 app.listen(PORT, (err) => {

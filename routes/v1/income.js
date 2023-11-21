@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const incomeController = require("../../controllers/income");
 const { body, param } = require("express-validator");
+const { protect, authorize } = require("../../middleware/auth");
 
 router.get("/incomes", incomeController.getIncomes);
 router.post(
